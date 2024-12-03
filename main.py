@@ -5,11 +5,11 @@ import pandas as pd
 from deepface import DeepFace
 from datetime import datetime
 import openai
-from secrets import api_key
+import secrets_api
 
 
 
-openai.api_key = api_key
+openai.api_key = secrets_api.api_key
 students = pd.read_csv("attendence.csv")
 current_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -84,9 +84,9 @@ def save_data():
 def get_response(prompt):
     data = students.to_string(index=False)
     prompt = f"Here is the attendance data:\n{data}\n\n{prompt}"
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=prompt,
         max_tokens=150
     )
     return response.choices[0].text.strip()
@@ -103,3 +103,4 @@ if __name__ == "__main__":
         print(get_response(prompt))
     else:
         print("Invalid choice. Please enter '1' or '2'.")
+        

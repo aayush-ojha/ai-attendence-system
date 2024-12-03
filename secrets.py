@@ -1,1 +1,0 @@
-api_key = "get your key from openai"

@@ -4,12 +4,13 @@ import os
 import pandas as pd
 from deepface import DeepFace
 from datetime import datetime
-import openai
-from secrets import api_key
+from openai import OpenAI
+import google.generativeai as genai
+import secrets_api
 
 
-
-openai.api_key = api_key
+genai.configure(api_key=secrets_api.gemini_api_key)
+client = OpenAI(api_key=secrets_api.openai_api_key)
 students = pd.read_csv("attendence.csv")
 current_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -81,15 +82,22 @@ def add_attendence(student):
 def save_data():
     students.to_csv("attendence.csv", index=False)
 
-def get_response(prompt):
-    data = students.to_string(index=False)
-    prompt = f"Here is the attendance data:\n{data}\n\n{prompt}"
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=150
-    )
-    return response.choices[0].text.strip()
+#uncomment the below code and comment the get_response_gemini() to use chatgpt 
+# def get_response_openai(prompt):
+#     data = students.to_string(index=False)
+#     prompt = f"Here is the attendance data:\n{data}\n\n{prompt}"
+#     response = client.chat.completions.create(
+#         model="gpt-4o",
+#         messages=[{"role": "user", "content": prompt}],
+#     )
+#     return response.choices[0].text.strip()
+
+
+#uncomment the below code and comment the get_response_openai() to use gemini
+def get_response_gemini(prompt):
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt)
+    return response.text
 
 if __name__ == "__main__":
     choice = input("Enter '1' to recognize faces or '2' to get information from the CSV file: ")
@@ -100,6 +108,9 @@ if __name__ == "__main__":
         save_data()
     elif choice == '2':
         prompt = input("Enter your question: ")
-        print(get_response(prompt))
+        #uncomment the below code and comment the get_response_gemini() to use chatgpt
+        # print(get_response_openai(prompt))
+        #uncomment the below code and comment the get_response_openai() to use gemini
+        print(get_response_gemini(prompt))
     else:
         print("Invalid choice. Please enter '1' or '2'.")

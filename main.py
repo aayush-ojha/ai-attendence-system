@@ -114,3 +114,4 @@ if __name__ == "__main__":
         print(get_response_gemini(prompt))
     else:
         print("Invalid choice. Please enter '1' or '2'.")
+        

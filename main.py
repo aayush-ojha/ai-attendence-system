@@ -95,6 +95,8 @@ def save_data():
 
 #uncomment the below code and comment the get_response_openai() to use gemini
 def get_response_gemini(prompt):
+    data = students.to_string(index=False)
+    prompt = f"Here is the attendance data:\n{data}\n\n{prompt}"
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(prompt)
     return response.text

@@ -20,7 +20,7 @@ This project is a fully AI-based attendance system that uses facial recognition 
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/ai-attendance-system.git
+   git clone https://github.com/aayush-ojha/ai-attendance-system.git
    cd ai-attendance-system
    ```
 
